@@ -1,0 +1,243 @@
+[gd_scene load_steps=24 format=3 uid="uid://dcgmxq5fi4mk4"]
+
+[ext_resource type="Script" path="res://scripts/player/Player.gd" id="1_76eep"]
+[ext_resource type="Texture2D" uid="uid://bno8levaxnv5c" path="res://sprites/player/playerspritesheet2.png" id="2_l7mkd"]
+[ext_resource type="PackedScene" uid="uid://c8rlu6sbxfbl8" path="res://scenes/weapons/test_weapon.tscn" id="3_ltydf"]
+[ext_resource type="Script" path="res://scripts/state_machine/state_manager.gd" id="3_n8vma"]
+[ext_resource type="Script" path="res://scripts/weapons/weapon.gd" id="4_5jgf5"]
+[ext_resource type="Script" path="res://scripts/player/states/idle.gd" id="4_pbxvn"]
+[ext_resource type="Script" path="res://scripts/player/states/move.gd" id="5_6cjqa"]
+[ext_resource type="Script" path="res://scripts/player/states/hurt.gd" id="6_prd3g"]
+[ext_resource type="Script" path="res://scripts/player/states/attack.gd" id="7_nr0km"]
+[ext_resource type="Script" path="res://scripts/player/states/dodge.gd" id="8_vvno1"]
+[ext_resource type="PackedScene" uid="uid://bsy8nscwwn8qv" path="res://scenes/components/hurtbox_component.tscn" id="9_00ckw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_keuo5"]
+size = Vector2(10, 6)
+
+[sub_resource type="Animation" id="Animation_jb6s7"]
+resource_name = "IdleDown"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+
+[sub_resource type="Animation" id="Animation_h7jql"]
+resource_name = "IdleLeft"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [5]
+}
+
+[sub_resource type="Animation" id="Animation_o4jlt"]
+resource_name = "IdleRight"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+
+[sub_resource type="Animation" id="Animation_ixqdc"]
+resource_name = "IdleUp"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [11]
+}
+
+[sub_resource type="Animation" id="Animation_onv8p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+
+[sub_resource type="Animation" id="Animation_lyopl"]
+resource_name = "down"
+length = 0.3
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_tfiif"]
+resource_name = "left"
+length = 0.3
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_keqe6"]
+resource_name = "right"
+length = 0.3
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [6, 7]
+}
+
+[sub_resource type="Animation" id="Animation_5mw05"]
+resource_name = "up"
+length = 0.3
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [9, 10]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pmdsv"]
+_data = {
+"IdleDown": SubResource("Animation_jb6s7"),
+"IdleLeft": SubResource("Animation_h7jql"),
+"IdleRight": SubResource("Animation_o4jlt"),
+"IdleUp": SubResource("Animation_ixqdc"),
+"RESET": SubResource("Animation_onv8p"),
+"down": SubResource("Animation_lyopl"),
+"left": SubResource("Animation_tfiif"),
+"right": SubResource("Animation_keqe6"),
+"up": SubResource("Animation_5mw05")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qt031"]
+radius = 7.0
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("equipped_weapon")]
+z_index = 5
+y_sort_enabled = true
+collision_layer = 2
+script = ExtResource("1_76eep")
+equipped_weapon = NodePath("Aim/test_weapon")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_keuo5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_l7mkd")
+hframes = 3
+vframes = 4
+frame = 3
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_pmdsv")
+}
+
+[node name="Aim" type="Node2D" parent="."]
+z_index = 1
+
+[node name="test_weapon" parent="Aim" instance=ExtResource("3_ltydf")]
+position = Vector2(8, 1)
+script = ExtResource("4_5jgf5")
+
+[node name="StateManager" type="Node" parent="."]
+script = ExtResource("3_n8vma")
+starting_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateManager"]
+script = ExtResource("4_pbxvn")
+
+[node name="Move" type="Node" parent="StateManager"]
+script = ExtResource("5_6cjqa")
+
+[node name="Hurt" type="Node" parent="StateManager"]
+script = ExtResource("6_prd3g")
+
+[node name="Attack" type="Node" parent="StateManager"]
+script = ExtResource("7_nr0km")
+
+[node name="Dodge" type="Node" parent="StateManager"]
+script = ExtResource("8_vvno1")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="HurtboxComponent" parent="." instance=ExtResource("9_00ckw")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CircleShape2D_qt031")

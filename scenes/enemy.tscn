@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://p6t5waqyc5ss"]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="1_iiv03"]
+[ext_resource type="Texture2D" uid="uid://dt4gbv13kmpku" path="res://sprites/enemies/enemy.png" id="2_7t0rl"]
+[ext_resource type="PackedScene" uid="uid://bsy8nscwwn8qv" path="res://scenes/components/hurtbox_component.tscn" id="4_buyye"]
+[ext_resource type="PackedScene" uid="uid://b2fk2iop2lanw" path="res://scenes/components/hitbox_component.tscn" id="4_iukii"]
+[ext_resource type="Script" path="res://scripts/state_machine/state_manager.gd" id="6_j52nq"]
+
+[node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("states", "hitbox_comp")]
+collision_layer = 4
+collision_mask = 5
+safe_margin = 0.02
+script = ExtResource("1_iiv03")
+states = NodePath("StateManager")
+hitbox_comp = NodePath("HitboxComponent")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_7t0rl")
+hframes = 3
+frame = 2
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("parent_hurtbox") instance=ExtResource("4_iukii")]
+collision_layer = 4
+collision_mask = 2
+parent_hurtbox = NodePath("../HurtboxComponent")
+attack_damage = 1
+knockback_force = 100.0
+
+[node name="Collider" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(0, 1)
+
+[node name="HurtboxComponent" parent="." instance=ExtResource("4_buyye")]
+collision_layer = 4
+collision_mask = 6
+
+[node name="Collider" type="CollisionShape2D" parent="HurtboxComponent"]
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="Collider" type="CollisionShape2D" parent="PlayerDetection"]
+
+[node name="StateManager" type="Node" parent="."]
+script = ExtResource("6_j52nq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
+[connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]

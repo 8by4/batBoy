@@ -1,0 +1,158 @@
+[gd_scene load_steps=18 format=3 uid="uid://d2takmy3jpeve"]
+
+[ext_resource type="PackedScene" uid="uid://p6t5waqyc5ss" path="res://scenes/enemy.tscn" id="1_1qi56"]
+[ext_resource type="Texture2D" uid="uid://bx8b4kbqu8veq" path="res://sprites/enemies/testEnemy.png" id="2_0ylki"]
+[ext_resource type="Script" path="res://scripts/enemies/test_enemy/test_enemy.gd" id="2_6mxi3"]
+[ext_resource type="Script" path="res://scripts/enemies/common_states/hurt.gd" id="4_aei25"]
+[ext_resource type="Script" path="res://scripts/enemies/common_states/dead.gd" id="5_th14o"]
+[ext_resource type="Script" path="res://scripts/enemies/common_states/idle.gd" id="6_a6cye"]
+[ext_resource type="Script" path="res://scripts/enemies/common_states/pursue.gd" id="7_jt1w8"]
+[ext_resource type="Script" path="res://scripts/enemies/common_states/wait.gd" id="8_sihxv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_htxf3"]
+size = Vector2(12, 12)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cbhya"]
+radius = 14.0357
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mffp4"]
+radius = 9.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5fr3u"]
+radius = 37.0135
+
+[sub_resource type="Animation" id="Animation_1srrx"]
+resource_name = "Idle"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_38nta"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_w3lke"]
+resource_name = "Pursue"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_q2lte"]
+resource_name = "Hurt"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lrkmf"]
+_data = {
+"Hurt": SubResource("Animation_q2lte"),
+"Idle": SubResource("Animation_1srrx"),
+"Pursue": SubResource("Animation_w3lke"),
+"RESET": SubResource("Animation_38nta")
+}
+
+[node name="test_enemy" node_paths=PackedStringArray("animator", "hurt", "dead") instance=ExtResource("1_1qi56")]
+script = ExtResource("2_6mxi3")
+animator = NodePath("AnimationPlayer")
+hurt = NodePath("StateManager/Hurt")
+dead = NodePath("StateManager/Dead")
+speed = 2000.0
+
+[node name="Sprite" parent="." index="0"]
+texture = ExtResource("2_0ylki")
+frame = 0
+
+[node name="Collider" parent="." index="1"]
+visible = false
+position = Vector2(0, 0)
+shape = SubResource("RectangleShape2D_htxf3")
+
+[node name="HitboxComponent" parent="." index="2"]
+collision_mask = 8
+
+[node name="Collider" parent="HitboxComponent" index="0"]
+position = Vector2(0, 0)
+shape = SubResource("CircleShape2D_cbhya")
+
+[node name="HurtboxComponent" parent="." index="3"]
+collision_layer = 8
+collision_mask = 4
+
+[node name="Collider" parent="HurtboxComponent" index="0"]
+shape = SubResource("CircleShape2D_mffp4")
+
+[node name="PlayerDetection" parent="." index="4"]
+visible = false
+
+[node name="Collider" parent="PlayerDetection" index="0"]
+shape = SubResource("CircleShape2D_5fr3u")
+
+[node name="StateManager" parent="." index="5"]
+starting_state = NodePath("Idle")
+
+[node name="Hurt" type="Node" parent="StateManager" index="0"]
+script = ExtResource("4_aei25")
+animation_name = "Hurt"
+
+[node name="Dead" type="Node" parent="StateManager" index="1"]
+script = ExtResource("5_th14o")
+
+[node name="Idle" type="Node" parent="StateManager" index="2"]
+script = ExtResource("6_a6cye")
+animation_name = "Idle"
+
+[node name="Pursue" type="Node" parent="StateManager" index="3"]
+script = ExtResource("7_jt1w8")
+animation_name = "Pursue"
+
+[node name="Wait" type="Node" parent="StateManager" index="4"]
+script = ExtResource("8_sihxv")
+
+[node name="AnimationPlayer" parent="." index="6"]
+libraries = {
+"": SubResource("AnimationLibrary_lrkmf")
+}

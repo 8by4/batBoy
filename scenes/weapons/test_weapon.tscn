@@ -1,0 +1,92 @@
+[gd_scene load_steps=8 format=3 uid="uid://c8rlu6sbxfbl8"]
+
+[ext_resource type="PackedScene" uid="uid://b2fk2iop2lanw" path="res://scenes/components/hitbox_component.tscn" id="1_2uwib"]
+[ext_resource type="Script" path="res://scripts/weapons/test_weapon.gd" id="1_vtc5e"]
+[ext_resource type="Texture2D" uid="uid://xssgjtkdmdn2" path="res://icon.svg" id="2_tn666"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x3bpi"]
+radius = 3.0
+height = 8.0
+
+[sub_resource type="Animation" id="Animation_r6kov"]
+resource_name = "Attack"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitboxComponent/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_vkxya"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HitboxComponent/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h8rm3"]
+_data = {
+"Attack": SubResource("Animation_r6kov"),
+"RESET": SubResource("Animation_vkxya")
+}
+
+[node name="test_weapon" type="Node2D"]
+y_sort_enabled = true
+scale = Vector2(2, 2)
+script = ExtResource("1_vtc5e")
+
+[node name="HitboxComponent" parent="." instance=ExtResource("1_2uwib")]
+attack_damage = 1
+knockback_force = 150.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(3, 0)
+shape = SubResource("CapsuleShape2D_x3bpi")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.0234375, 0.0234375)
+texture = ExtResource("2_tn666")
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_h8rm3")
+}
